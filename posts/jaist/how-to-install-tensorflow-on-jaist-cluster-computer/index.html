@@ -37,11 +37,11 @@
     <link rel="icon" type="image/png" href="/images/icon.png">
     <link rel="apple-touch-icon" type="image/png" href="/img/icon-apple.png">
 
-    <link rel="canonical" href="http://tmanh.github.io/posts/jaist/how-to-reserve-a-seminar-room/">
+    <link rel="canonical" href="http://tmanh.github.io/posts/how-to-install-tensorflow-on-jaist-cluster-computer/">
 
     <meta property="og:site_name" content="Anh&#39;s blog">
-    <meta property="og:url" content="http://tmanh.github.io/posts/jaist/how-to-reserve-a-seminar-room/">
-    <meta property="og:title" content="How to reserve a seminar room | Anh&#39;s blog">
+    <meta property="og:url" content="http://tmanh.github.io/posts/jaist/how-to-install-tensorflow-on-jaist-cluster-computer/">
+    <meta property="og:title" content="How to install Tensorflow on JAIST CX250 Cluster Computer | Anh&#39;s blog">
     <meta property="og:description" content="">
     <meta property="og:locale" content="en-us">
 
@@ -56,7 +56,7 @@
         });
     </script>
 
-    <title>How to reserve a seminar room | Anh&#39;s blog</title>
+    <title>How to install Tensorflow on JAIST CX250 Cluster Computer | Anh&#39;s blog</title>
 </head>
 
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -112,7 +112,7 @@
 
     <article class="article" itemscope itemtype="http://schema.org/Article">
         <div class="article-container">
-            <h1 itemprop="name" align="justify">How to reserve a seminar room</h1>
+            <h1 itemprop="name" align="justify">How to install Tensorflow on JAIST CX250 Cluster Computer</h1>
 
             <div class="article-metadata">
                 <span class="article-date">
@@ -125,7 +125,7 @@
                     <ul class="share">
                         <li>
                           <a class="email"
-                             href="mailto:?subject=How%20to%20reserve%20a%20seminar%20room&amp;body=http%3a%2f%2ftmanh.github.io%2fposts%2fjaist%2fhow-to-reserve-a-seminar-room%2f">
+                             href="mailto:?subject=How%20to%20install%20Tensorflow%20on%20JAIST%20CX250%20Cluster%20Computer&amp;body=http%3a%2f%2ftmanh.github.io%2fposts%2fjaist%2fhow-to-install-tensorflow-on-jaist-cluster-computer%2f">
                             <i class="fa fa-envelope"></i>
                           </a>
                         </li>
@@ -134,35 +134,107 @@
             </div>
 
             <div class="article-style" itemprop="articleBody">
-                <p align="justify"> <b>Step 1:</b> Check the reservation status </p>
+                <p align="justify"> <b>Why do I need CX250 Cluster?</b> </p>
+                <blockquote>
+                    <p>Your computer does not have GPU or it is not suitable for running code. (JAIST has introduced another cluster computer with P100. It's much more powerful than CX250. It also supports tensorflow. So, you don't need to suffer the installation process that I described below.)</p>
+                </blockquote>
+
+                <p align="justify"> In the past, we could not install Tensorflow on CX250 Cluster because its GLIBC is too old for running Tensorflow. But, recently, they added a folder with new GLIBC. It allows us to run python and tensorflow with new GLIBC. So, I write this blog to show you the way to run tensorflow with the alternative GLIBC. </p>
+
+                <p align="justify"> <b>Step 1:</b> Install Python </p>
                 <ul style="list-style-type:disc">
                     <li>
-                        Go to this <a href="http://www2.jaist.ac.jp/cgi-local/room/searchhome">site</a> to check the reservation status
-                        <p align="center"> <a data-flickr-embed="true"  href="https://www.flickr.com/photos/55900442@N05/37892507066/in/dateposted-public/" title="reserve-room-step0"><img src="https://farm5.staticflickr.com/4478/37892507066_5231ba30f1.jpg" width="350" height="156" alt="reserve-room-step0"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> </p>
+                        Before installing Python, log in to the CX250 Cluster. Then, you have to download the source code from this <a href="https://www.python.org/downloads/">site</a>. For example:
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tar.xz</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        Then, you have to extract the compressed file and compile Python from the source code and install it in your working directory. For example:
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>tar -xzvf Python-2.7.14.tar.xz<br>cd Python-2.7.14<br>./configure --enable-shared --prefix=/work/${USER}/python/py27 LDFLAGS="-Wl,--rpath=/usr/local/lib"<br>make<br>make install</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        If you have any problems which related to unicode while importing Tensorflow, you have to rebuild Python with enable-unicode flag. For example:
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>./configure --enable-shared --enable-unicode=ucs4 --prefix=/work/${USER}/python/py27 LDFLAGS="-Wl,--rpath=/usr/local/lib"<br>make<br>make install</code></pre>
+                        </div>
                     </li>
                 </ul>
 
-                <p align="justify"> <b>Step 2:</b> Go to one of the links below </p>
+                <p align="justify"> <b>Step 2 (Optional):</b> Install cuDNN. If you want to install the newest Tensorflow version (after version 1.2.0), you have to install a newer cuDNN version. </p>
                 <ul style="list-style-type:disc">
                     <li>
-                        IS school: <a href="http://www2.jaist.ac.jp/cgi-local/room/reservehome?TYPE=IS">http://www2.jaist.ac.jp/cgi-local/room/reservehome?TYPE=IS</a>
-                    </li>
-                    <li>
-                        IS school: <a href="http://www2.jaist.ac.jp/cgi-local/room/reservehome?TYPE=KS">http://www2.jaist.ac.jp/cgi-local/room/reservehome?TYPE=KS</a>
-                    </li>
-                    <li>
-                        IS school: <a href="http://www2.jaist.ac.jp/cgi-local/room/reservehome?TYPE=MS">http://www2.jaist.ac.jp/cgi-local/room/reservehome?TYPE=MS</a>
+                        Download the required cuDNN (in my case, it's cuDNN v6.0) from NVIDIA website.
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>wget http://developer.download.nvidia.com/compute/redist/cudnn/v6.0/cudnn-8.0-linux-x64-v6.0.tgz<br>tar -xzvf cudnn-8.0-linux-x64-v6.0.tgz<br>mv cuda cudnn</code></pre>
+                        </div>
                     </li>
                 </ul>
 
-                <p align="justify"> <b>Step 3:</b> Choose the time </p>
-                <p align="center"> <a data-flickr-embed="true"  href="https://www.flickr.com/photos/55900442@N05/37235712954/in/dateposted-public/" title="reserve-room-step1"><img src="https://farm5.staticflickr.com/4492/37235712954_ba104c01e2_n.jpg" width="320" height="93" alt="reserve-room-step1"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> </p>
-                <p align="justify"> <b>Step 4:</b> Choose the room </p>
-                <p align="center"> <a data-flickr-embed="true"  href="https://www.flickr.com/photos/55900442@N05/26169501639/in/dateposted-public/" title="reserve-room-step2"><img src="https://farm5.staticflickr.com/4502/26169501639_0f0d46b915.jpg" width="500" height="259" alt="reserve-room-step2"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> </p>
-                <p align="justify"> <b>Step 5:</b> Confirm your reservation </p>
-                <p align="center"> <a data-flickr-embed="true"  href="https://www.flickr.com/photos/55900442@N05/26169501729/in/dateposted-public/" title="reserve-room-step3"><img src="https://farm5.staticflickr.com/4476/26169501729_e04811e7a0.jpg" width="337" height="221" alt="reserve-room-step3"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> </p>
-                <p align="justify"> <b>Step 6:</b> Click the link to check the result of your reservation</p>
-                <p align="justify"> <b>Step 7:</b> Finally, you need to get the key of the seminar room from your supervisor.</p>
+                <p align="justify"> <b>Step 3:</b> Set environment variables</p>
+                <ul style="list-style-type:disc">
+                    <li>
+                        Go to your home directory.
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>cd ~</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        Create <i> .tcshrc </i> file with the following content. I also created a alias named <code>python-tf</code> to run python with the alternative GLIBC.
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>module unload cuda<br>module load cuda/8.0<br><br># IMPORT CUDA<br>setenv LD_LIBRARY_PATH  /opt/cuda/8.0/lib64:/work/${USER}/cudnn/lib64<br><br># IMPORT GCC<br>setenv LD_LIBRARY_PATH  /work/opt/gcc485/lib64:${LD_LIBRARY_PATH}<br><br># PYTHON PATH<br>setenv PYTHON_PATH      /work/${USER}/python/py27<br><br># IMPORT PYTHON<br>setenv LD_LIBRARY_PATH  /work/${USER}/python/py27-14/lib:${LD_LIBRARY_PATH}<br><br># IMPORT GLIBC<br>setenv LDPATH           /work/opt/glibc-2.17/lib/ld-linux-x86-64.so.2<br>setenv LDLIBS           ${LD_LIBRARY_PATH}:/work/opt/glibc-2.17/lib:/usr/lib64:/usr/lib:/lib64<br><br># ALIAS<br>alias python-tf "${LDPATH} --library-path ${LDLIBS} ${PYTHON_PATH}/bin/python"</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        If you do not use any newer versions of cuDNN. Then, just remove the cuDNN directory while importing CUDA.
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code># IMPORT CUDA<br>setenv LD_LIBRARY_PATH  /opt/cuda/8.0/lib64</code></pre>
+                        </div>
+                    </li>
+                </ul>
+
+                <p align="justify"> <b>Step 3:</b> Install Tensorflow</p>
+                    <li>
+                        Install pip from this <a href="https://pip.pypa.io/en/stable/installing/">site</a>
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>wget https://bootstrap.pypa.io/get-pip.py<br>python get-pip.py</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        After that, you have to log out and log in to the cluster computer once again.
+                    </li>
+
+                    <li>
+                        Now, install your expected Tensorflow version. For example:
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>pip install https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.4.0-cp27-none-linux_x86_64.whl</code></pre>
+                        </div>
+                    </li>
+
+                    <li>
+                        Finally, try to run a small example code.
+
+                        <div class="highlighter-rouge">
+                            <pre class="highlight"><code>python-tf<br>import tensorflow as tf<br><br>sess = tf.Session()<br><br>a = tf.constant(5)<br>b = tf.constant(5)<br><br>print(sess.run(a + b))</code></pre>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </article>
@@ -170,11 +242,8 @@
     <div class="container">
         <nav>
             <ul class="pager">
-                <li class="previous"><a href="https://tmanh.github.io/posts/jaist/application-for-permission-to-engage-in-activity-other-than-that-permitted-under-the-status-of-residence-previously-granted/"><span
-                  aria-hidden="true">&larr;</span> Application for Permission to Engage in Activity other than that Permitted under the Status of Residence Previously Granted</a></li>
-
-                <li class="next"><a href="https://tmanh.github.io/posts/jaist/how-to-install-tensorflow-on-jaist-cluster-computer/">How to install Tensorflow on JAIST CX250 Cluster Computer<span
-                    aria-hidden="true">&rarr;</span></a></li>
+                <li class="previous"><a href="https://tmanh.github.io/posts/jaist/how-to-reserve-a-seminar-room/"><span
+                  aria-hidden="true">&larr;</span> How to reserve a seminar room</a></li>
             </ul>
         </nav>
     </div>
